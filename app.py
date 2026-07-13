@@ -1172,50 +1172,78 @@ with tab2:
         # Two-column matching layout
         col_terms, col_defs = st.columns(2)
 
+        def state_rule(selected):
+            if selected:
+                return ("background: var(--bg-term-left) !important; "
+                        "border-color: #4A7C7E !important; "
+                        "color: var(--text-term-left) !important; font-weight: 600 !important;")
+            return ("background: var(--bg-term) !important; "
+                    "border-color: var(--border-term) !important; "
+                    "color: var(--text-term) !important;")
+
+        matched_defs = {d for t, d in st.session_state.game_pairs if t in st.session_state.game_matched}
+
+        # Matched items are rendered as plain static text (reusing the existing
+        # .term-card.matched style) — not as widgets — so the widget count
+        # shrinks rather than grows as a round progresses. That's what was
+        # causing the post-click lag. Position order is preserved by computing
+        # state first, then rendering everything in one pass in original order.
+        left_states = [(term, term in st.session_state.game_matched,
+                         st.session_state.game_selected_left == term)
+                        for term in st.session_state.game_left_order]
+        right_states = [(defn, defn in matched_defs,
+                          st.session_state.game_selected_right == defn)
+                         for defn in st.session_state.game_right_order]
+
+        css_rules = []
+        for i, (term, matched, selected) in enumerate(left_states):
+            if not matched:
+                css_rules.append(f""".st-key-termbox_left_{i} button {{
+                    {state_rule(selected)}
+                    border-radius: 18px !important; border-width: 2px !important; border-style: solid !important;
+                    font-family: 'DM Sans', sans-serif !important; font-size: 0.95rem !important; font-weight: 500 !important;
+                    padding: 1.1rem 1.2rem !important; box-shadow: none !important; width: 100% !important;
+                }}""")
+        for i, (defn, matched, selected) in enumerate(right_states):
+            if not matched:
+                css_rules.append(f""".st-key-termbox_right_{i} button {{
+                    {state_rule(selected)}
+                    border-radius: 18px !important; border-width: 2px !important; border-style: solid !important;
+                    font-family: 'DM Sans', sans-serif !important; font-size: 0.95rem !important; font-weight: 500 !important;
+                    padding: 1.1rem 1.2rem !important; box-shadow: none !important; width: 100% !important;
+                }}""")
+        if css_rules:
+            st.markdown(f"<style>{''.join(css_rules)}</style>", unsafe_allow_html=True)
+
         with col_terms:
             st.markdown('<div class="section-label" style="text-align:center;">Medical term</div>', unsafe_allow_html=True)
-            for term in st.session_state.game_left_order:
-                if term in st.session_state.game_matched:
-                    css = "matched"
-                    label = f"✓ {term}"
-                elif st.session_state.game_selected_left == term:
-                    css = "selected-left"
-                    label = f"● {term}"
+            for i, (term, matched, selected) in enumerate(left_states):
+                if matched:
+                    st.markdown(f'<div class="term-card matched">✓ {html.escape(term)}</div>', unsafe_allow_html=True)
                 else:
-                    css = ""
-                    label = term
-                st.markdown(f'<div class="term-card {css}">{html.escape(label)}</div>', unsafe_allow_html=True)
-                if term not in st.session_state.game_matched:
-                    if st.button(f"Select: {term}", key=f"left_{term}", help=f"Select '{term}'",
-                                 use_container_width=True):
-                        st.session_state.game_selected_left = term
-                        st.session_state.game_feedback = None
-                        if st.session_state.game_selected_right:
-                            check_match()
-                        st.rerun()
+                    label = f"● {term}" if selected else term
+                    with st.container(key=f"termbox_left_{i}"):
+                        if st.button(label, key=f"left_{i}", use_container_width=True):
+                            st.session_state.game_selected_left = term
+                            st.session_state.game_feedback = None
+                            if st.session_state.game_selected_right:
+                                check_match()
+                            st.rerun()
 
         with col_defs:
             st.markdown('<div class="section-label" style="text-align:center;">Plain-English meaning</div>', unsafe_allow_html=True)
-            matched_defs = {d for t, d in st.session_state.game_pairs if t in st.session_state.game_matched}
-            for defn in st.session_state.game_right_order:
-                if defn in matched_defs:
-                    css = "matched"
-                    label = f"✓ {defn}"
-                elif st.session_state.game_selected_right == defn:
-                    css = "selected-right"
-                    label = f"● {defn}"
+            for i, (defn, matched, selected) in enumerate(right_states):
+                if matched:
+                    st.markdown(f'<div class="term-card matched">✓ {html.escape(defn)}</div>', unsafe_allow_html=True)
                 else:
-                    css = ""
-                    label = defn
-                st.markdown(f'<div class="term-card {css}">{html.escape(label)}</div>', unsafe_allow_html=True)
-                if defn not in matched_defs:
-                    if st.button(f"Select: {defn}", key=f"right_{defn}", help=f"Select '{defn}'",
-                                 use_container_width=True):
-                        st.session_state.game_selected_right = defn
-                        st.session_state.game_feedback = None
-                        if st.session_state.game_selected_left:
-                            check_match()
-                        st.rerun()
+                    label = f"● {defn}" if selected else defn
+                    with st.container(key=f"termbox_right_{i}"):
+                        if st.button(label, key=f"right_{i}", use_container_width=True):
+                            st.session_state.game_selected_right = defn
+                            st.session_state.game_feedback = None
+                            if st.session_state.game_selected_left:
+                                check_match()
+                            st.rerun()
 
         st.markdown("---")
         if st.button("↩ Reset score & start over"):
