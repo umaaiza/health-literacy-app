@@ -676,8 +676,10 @@ LANGUAGES = {
     "Arabic": "Arabic", "Mandarin Chinese": "Mandarin Chinese",
     "Portuguese": "Portuguese", "Tagalog": "Tagalog", "Vietnamese": "Vietnamese",
     "Urdu": "Urdu", "Korean": "Korean", "Swahili": "Swahili",
-    "Hindi": "Hindi", "Punjabi": "Punjabi", 
-    "Dari": "Dari" , "Persian": "Persian", "Japanese": "Japanese"
+    "Hindi": "Hindi", "Punjabi": "Punjabi",
+    "Dari": "Dari" , "Persian": "Persian", "Japanese": "Japanese",
+    "Bengali": "Bengali", "Telugu": "Telugu", "Tamil": "Tamil", "Malayalam": "Malayalam",
+    "Russian": "Russian", "Haitian Creole": "Haitian Creole", "Gujarati": "Gujarati", "Nepali": "Nepali"
 }
 
 
@@ -1044,7 +1046,7 @@ Simplified version:"""}]
                                 file_name=f"simplified_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
                                 mime="text/plain", use_container_width=True)
                         with dl2:
-                            latin_langs = {"English","Spanish","French","Portuguese","Tagalog","Vietnamese"}
+                            latin_langs = {"English","Spanish","French","Portuguese","Tagalog","Vietnamese","Haitian Creole"}
                             if output_language in latin_langs:
                                 try:
                                     pdf = FPDF(); pdf.add_page(); pdf.set_font("Helvetica", size=12)
