@@ -1,6 +1,6 @@
 # health-literacy-app
 
-A Streamlit web app that uses Claude to simplify medical text (discharge instructions, clinical notes) into plain language across 16 languages, with adjustable reading levels, PHI/prompt-injection safeguards, rate limiting, and a Duolingo-style medical vocabulary game. Built as a health informatics portfolio project.
+A Streamlit web app that uses Claude to simplify medical text (discharge instructions, clinical notes) into plain language across 24 languages, with adjustable reading levels, PHI/prompt-injection safeguards, rate limiting, and a Duolingo-style medical vocabulary game. Built as a health informatics portfolio project.
 
 Nearly 9 out of 10 adults in the United States struggle with health literacy, and limited health literacy can cause worsened health outcomes (Center for Health Care Strategies, 2024). Health literacy is also associated with other determinants of health, such as education, income, access to care, and area-based measures of social disadvantage; these determinants are key to disease prevention and controlling health disparities, making health literacy a health equity issue to be addressed (Coughlin et al., 2020).
 
