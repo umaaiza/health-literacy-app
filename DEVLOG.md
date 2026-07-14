@@ -8,7 +8,7 @@ The base idea: patients get discharge instructions and clinical notes full of ja
 
 This lives in the **Simplifier** tab (`tab1`). It calls the Anthropic API (`client.messages.create`, Claude Sonnet) with a system prompt that scopes the model to one job — simplify medical text — and a user prompt built from four knobs:
 
-- **Output language** — 16 options (`LANGUAGES` dict), from English through Urdu, Dari, and Japanese. (Fixed during repo setup: the hero banner used to hardcode "13 Languages," out of sync with the actual list. It now reads `len(LANGUAGES)` dynamically, so it can't drift again.)
+- **Output language** — 24 options (`LANGUAGES` dict), from English through Urdu, Dari, Japanese, and later Bengali, Telugu, Tamil, and Malayalam, followed by Russian, Haitian Creole, Gujarati, and Nepali. (Fixed during repo setup: the hero banner used to hardcode "13 Languages," out of sync with the actual list. It now reads `len(LANGUAGES)` dynamically, so it can't drift again — adding these languages required no other code change.)
 - **Tone** — warm & reassuring / clinical & clear / child-friendly.
 - **Reading level** — a grade 2–8 slider, or a "bullet points only" mode for very low literacy that caps bullets at 8 words.
 - **Follow-up questions** — an optional "Questions to Ask Your Doctor" section appended by the model and then split back out in code so it renders in its own card.
@@ -47,7 +47,7 @@ A second tab, unrelated to the simplifier's core loop but sharing its design sys
 
 **History** (`tab3`) — a session-scoped log of past simplifications (timestamp, language, tone, grade, truncated original/result). Explicitly not persisted — cleared when the browser tab closes, which is called out both in the UI copy and the disclaimer.
 
-**About** (`tab4`) — originally held both the health-equity case for the project (literacy statistics, disparities by race/income/language/geography, sourced citations) *and* a plain-language security/privacy summary. The external research and citations were removed from the tab; a condensed version of the health-literacy case, with inline citations, now lives in the README's intro instead. The tab itself covers what the app is and the security model above.
+**About** (`tab4`) — originally held both the health-equity case for the project (literacy statistics, disparities by race/income/language/geography, sourced citations) *and* a plain-language security/privacy summary. The external research and citations were removed from the tab; The tab itself covers what the app is and the security model above.
 
 ## 6. Output and export
 
